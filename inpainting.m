@@ -36,7 +36,7 @@ outputImg = mask.*inputImg; return
 while any(fillRegion)
 
     % decide fill front
-    [p, fillConfidence] = decideFillFront(X_inpainted, fillRegion, Confidence, psz, Data);
+    [p, fillConfidence] = decideFillFront(outputImg, fillRegion, Confidence, psz, Data);
 
     % full search
 
