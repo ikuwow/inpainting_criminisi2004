@@ -25,7 +25,6 @@ if mod(psz,2)==0; error('Patch size psz must be odd.'); end
 %}
 
 
-function [inpaintedImg,origImg,fillImg,C,D,fillMovie] = inpainting(imgFilename,fillFilename,fillColor)
 %INPAINT  Exemplar-based inpainting.
 %
 % Usage:   [inpaintedImg,origImg,fillImg,C,D,fillMovie] ...
@@ -35,6 +34,8 @@ function [inpaintedImg,origImg,fillImg,C,D,fillMovie] = inpainting(imgFilename,f
 %   fillFilename   Filename of the image specifying the fill region. 
 %   fillColor      1x3 RGB vector specifying the color used to specify
 %                  the fill region.
+%   - psz: patch size (odd scalar). If psz=5, patch size is 5x5.
+%
 % Outputs:
 %   inpaintedImg   The inpainted image; an MxNx3 matrix of doubles. 
 %   origImg        The original image; an MxNx3 matrix of doubles.
@@ -48,6 +49,7 @@ function [inpaintedImg,origImg,fillImg,C,D,fillMovie] = inpainting(imgFilename,f
 %   plotall;           % quick and dirty plotting script
 %   close; movie(mov); % grab some popcorn 
 %
+function [inpaintedImg,origImg,fillImg,C,D,fillMovie] = inpainting(imgFilename,fillFilename,fillColor,psz)
 
 [img,fillImg,fillRegion] = loadimgs(imgFilename,fillFilename,fillColor);
 % img : original
@@ -93,7 +95,7 @@ while any(fillRegion(:))
   
   % Compute confidences along the fill front
   for k=dR'
-    Hp = getpatch(sz,k);
+    Hp = getpatch(sz,k,psz);
     q = Hp(~(fillRegion(Hp))); % fillRegionの中でパッチの部分だけ取り出して、
     C(k) = sum(C(q))/numel(Hp);
   end
@@ -105,7 +107,7 @@ while any(fillRegion(:))
   % Find patch with maximum priority, Hp
   [~,ndx] = max(priorities(:));
   p = dR(ndx(1));
-  [Hp,rows,cols] = getpatch(sz,p);
+  [Hp,rows,cols] = getpatch(sz,p,psz);
   toFill = fillRegion(Hp);
   
   % Find exemplar that minimizes error, Hq
@@ -151,9 +153,9 @@ Hq = sub2ndx(best(1):best(2),(best(3):best(4))',mm);
 %---------------------------------------------------------------------
 % Returns the indices for a 9x9 patch centered at pixel p.
 %---------------------------------------------------------------------
-function [Hp,rows,cols] = getpatch(sz,p)
+function [Hp,rows,cols] = getpatch(sz,p,psz)
 % [x,y] = ind2sub(sz,p);  % 2*w+1 == the patch size
-w=4; p=p-1; y=floor(p/sz(1))+1; p=rem(p,sz(1)); x=floor(p)+1;
+w=(psz-1)/2; p=p-1; y=floor(p/sz(1))+1; p=rem(p,sz(1)); x=floor(p)+1;
 rows = max(x-w,1):min(x+w,sz(1));
 cols = (max(y-w,1):min(y+w,sz(2)))';
 Hp = sub2ndx(rows,cols,sz(1));

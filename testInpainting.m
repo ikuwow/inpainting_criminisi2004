@@ -20,7 +20,7 @@ imwrite(img,tmpImgFileName,'BMP');
 imgFilename = testImageSource;
 fillFilename = tmpImgFileName;
 tic
-[i1,i2,i3,c,d,mov] = inpainting([imgFilename,'.png'],fillFilename,[0 255 0]);
+[i1,i2,i3,c,d,mov] = inpainting([imgFilename,'.png'],fillFilename,[0 255 0],psz);
 toc
 
 figure(1),imshow(uint8(i2)),title('Masked Image')
