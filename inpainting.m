@@ -3,9 +3,9 @@
 % The MATLAB implementation of inpainting algorithm by A. Criminisi (2004)
 %
 % Inputs: 
-%   - imgFilename    Filename of the original image.
-%   - fillFilename   Filename of the image specifying the fill region. 
-%   - psz: patch size (odd scalar). If psz=5, patch size is 5x5.
+%   - origImg        original image or corrupted image
+%   - mask           implies target region (1 denotes target region) 
+%   - psz:           patch size (odd scalar). If psz=5, patch size is 5x5.
 %
 % Outputs:
 %   - inpaintedImg   The inpainted image; an MxNx3 matrix of doubles. 
@@ -14,23 +14,18 @@
 %   - fillMovie      A Matlab movie struct depicting the fill region over time. 
 %
 % Example:
-%   [i1,c,d,mov] = inpaint('bungee0.png','bungee1.png',[0 255 0],psz);
+%   [i1,c,d,mov] = inpaint();
 %   plotall;           % quick and dirty plotting script
 %   close; movie(mov); % grab some popcorn 
 %
-function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,fillFilename,psz)
-
-%{
+function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,mask,psz)
 
 %% error check
 if ~ismatrix(mask); error('Invalid mask'); end
 if sum(sum(mask~=0 & mask~=1))>0; error('Invalid mask'); end
 if mod(psz,2)==0; error('Patch size psz must be odd.'); end
-%}
-fillColor = [0 255 0];
 
-fillImg = imread(fillFilename);
-fillRegion = fillImg(:,:,1)==fillColor(1) & fillImg(:,:,2)==fillColor(2) & fillImg(:,:,3)==fillColor(3);
+fillRegion = mask;
 
 origImg = double(origImg);
 img = origImg;
@@ -53,7 +48,7 @@ iter = 1;
 if nargout==4
   fillMovie(1).cdata=uint8(img); 
   fillMovie(1).colormap=[];
-  origImg(1,1,:) = fillColor;
+  origImg(1,1,:) = [0, 255, 0];
   iter = 2;
 end
 

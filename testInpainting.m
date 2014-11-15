@@ -9,22 +9,12 @@ testImageSource = fullfile(testImagePath,testImageName);
 
 origImg = imread([testImageSource,'.png']);
 
-img = origImg;
 mask = imread([testImageSource,'-mask.png']);
 mask(mask==255) = 1;
 
-%% maskedImg creation
-Rimg = img(:,:,1); Rimg(mask==1) = 0; img(:,:,1) = Rimg;
-Gimg = img(:,:,2); Gimg(mask==1) = 255; img(:,:,2) = Gimg;
-Bimg = img(:,:,3); Bimg(mask==1) = 0; img(:,:,3) = Bimg;
-tmpImgFileName = [testImageName,'_masked.bmp'];
-imwrite(img,tmpImgFileName,'BMP');
-
-fillFilename = tmpImgFileName;
-
 tic
 %output is fix!
-[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,fillFilename,psz);
+[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,mask,psz);
 toc
 maskedImg = repmat(uint8(~mask),[1,1,3]).*origImg;
 
