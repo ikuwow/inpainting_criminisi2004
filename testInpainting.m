@@ -8,7 +8,7 @@ clear
 TestImgName = 'lena';
 psz = 15; % patch size
 
-inputImg = rgb2gray(imread('lena.bmp','BMP')); % uint8
+inputImg = imread('lena.bmp','BMP'); % uint8
 
 
 mask = imread('mask.bmp','BMP'); % uint8
