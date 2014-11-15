@@ -2,7 +2,7 @@ clear
 
 %% parameters
 testImageName = 'bungee'; % cow or bungee or man
-psz = 15; % patch size ( to be inpainted in inpainting)
+psz = 9; % patch size ( to be inpainted in inpainting)
 
 testImagePath = '~/Documents/MATLAB/AutoShared/testimages/Petter_Strandmark/';
 testImageSource = fullfile(testImagePath,testImageName);
@@ -23,8 +23,10 @@ imwrite(img,tmpImgFileName,'BMP');
 fillFilename = tmpImgFileName;
 
 tic
-[inpaintedImg,maskedImg,c,d,fillingMovie] = inpainting(origImg,fillFilename,[0 255 0],psz);
+[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,fillFilename,[0 255 0],psz);
 toc
+mask_ = uint8(~mask);
+maskedImg = repmat(mask_,[1,1,3]).*origImg;
 
 figure(1),imshow(uint8(origImg)),title('Original Image')
 figure(2),imshow(uint8(maskedImg)),title('Masked Image')

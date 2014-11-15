@@ -44,7 +44,7 @@ if mod(psz,2)==0; error('Patch size psz must be odd.'); end
 %   plotall;           % quick and dirty plotting script
 %   close; movie(mov); % grab some popcorn 
 %
-function [inpaintedImg,fillImg,C,D,fillMovie] = inpainting(origImg,fillFilename,fillColor,psz)
+function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,fillFilename,fillColor,psz)
 
 img = double(origImg);
 fillImg = imread(fillFilename);
@@ -67,7 +67,7 @@ C = double(sourceRegion);
 D = repmat(-.1,sz);
 iter = 1;
 % Visualization stuff
-if nargout==5
+if nargout==4
   fillMovie(1).cdata=uint8(img); 
   fillMovie(1).colormap=[];
   origImg(1,1,:) = fillColor;
@@ -123,7 +123,7 @@ while any(fillRegion(:))
   img(rows,cols,:) = ind2img(ind(rows,cols),origImg);  
 
   % Visualization stuff
-  if nargout==5
+  if nargout==4
     ind2 = ind;
     ind2(logical(fillRegion)) = 1;
     fillMovie(iter).cdata=uint8(ind2img(ind2,origImg)); 
