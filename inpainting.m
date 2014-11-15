@@ -24,25 +24,20 @@ if sum(sum(mask~=0 & mask~=1))>0; error('Invalid mask'); end
 if mod(psz,2)==0; error('Patch size psz must be odd.'); end
 %}
 
-
-%INPAINT  Exemplar-based inpainting.
-%
-% Usage:   [inpaintedImg,origImg,fillImg,C,D,fillMovie] ...
-%                = inpaint(imgFilename,fillFilename,fillColor)
 % Inputs: 
-%   imgFilename    Filename of the original image.
-%   fillFilename   Filename of the image specifying the fill region. 
-%   fillColor      1x3 RGB vector specifying the color used to specify
-%                  the fill region.
+%   - imgFilename    Filename of the original image.
+%   - fillFilename   Filename of the image specifying the fill region. 
+%   - fillColor      1x3 RGB vector specifying the color used to specify
+%                    the fill region.
 %   - psz: patch size (odd scalar). If psz=5, patch size is 5x5.
 %
 % Outputs:
-%   inpaintedImg   The inpainted image; an MxNx3 matrix of doubles. 
-%   origImg        The original image; an MxNx3 matrix of doubles.
-%   fillImg        The fill region image; an MxNx3 matrix of doubles.
-%   C              MxN matrix of confidence values accumulated over all iterations.
-%   D              MxN matrix of data term values accumulated over all iterations.
-%   fillMovie      A Matlab movie struct depicting the fill region over time. 
+%   - inpaintedImg   The inpainted image; an MxNx3 matrix of doubles. 
+%   - origImg        The original image; an MxNx3 matrix of doubles.
+%   - fillImg        The fill region image; an MxNx3 matrix of doubles.
+%   - C              MxN matrix of confidence values accumulated over all iterations.
+%   - D              MxN matrix of data term values accumulated over all iterations.
+%   - fillMovie      A Matlab movie struct depicting the fill region over time. 
 %
 % Example:
 %   [i1,i2,i3,c,d,mov] = inpaint('bungee0.png','bungee1.png',[0 255 0]);
