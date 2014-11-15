@@ -23,10 +23,10 @@ imwrite(img,tmpImgFileName,'BMP');
 fillFilename = tmpImgFileName;
 
 tic
-[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,fillFilename,[0 255 0],psz);
+%output is fix!
+[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,fillFilename,psz);
 toc
-mask_ = uint8(~mask);
-maskedImg = repmat(mask_,[1,1,3]).*origImg;
+maskedImg = repmat(uint8(~mask),[1,1,3]).*origImg;
 
 figure(1),imshow(uint8(origImg)),title('Original Image')
 figure(2),imshow(uint8(maskedImg)),title('Masked Image')

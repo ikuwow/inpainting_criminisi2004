@@ -1,56 +1,39 @@
 % inpainting.m
 % 
 % The MATLAB implementation of inpainting algorithm by A. Criminisi (2004)
-% 
-% Inputs:
-% - inputImg: 
-% - mask: mask matrix (same size as inputImg). 1 denotes source region, and 0 denotes hole.
-% - psz: patch size (odd scalar). If psz=5, patch size is 5x5.
 %
-% Outputs:
-% - outputImg: inpainted image
-%
-
-%{
-function [outputImg] = inpainting(inputImg, mask, psz)
-
-inputImg = double(inputImg);
-mask = double(mask);
-
-%% error check
-if ~ismatrix(inputImg); error('Input image must be grayscale image.'); end
-if ~ismatrix(mask); error('Invalid mask'); end
-if sum(sum(mask~=0 & mask~=1))>0; error('Invalid mask'); end
-if mod(psz,2)==0; error('Patch size psz must be odd.'); end
-%}
-
 % Inputs: 
 %   - imgFilename    Filename of the original image.
 %   - fillFilename   Filename of the image specifying the fill region. 
-%   - fillColor      1x3 RGB vector specifying the color used to specify
-%                    the fill region.
 %   - psz: patch size (odd scalar). If psz=5, patch size is 5x5.
 %
 % Outputs:
 %   - inpaintedImg   The inpainted image; an MxNx3 matrix of doubles. 
-%   - origImg        The original image; an MxNx3 matrix of doubles.
-%   - fillImg        The fill region image; an MxNx3 matrix of doubles.
 %   - C              MxN matrix of confidence values accumulated over all iterations.
 %   - D              MxN matrix of data term values accumulated over all iterations.
 %   - fillMovie      A Matlab movie struct depicting the fill region over time. 
 %
 % Example:
-%   [i1,i2,i3,c,d,mov] = inpaint('bungee0.png','bungee1.png',[0 255 0]);
+%   [i1,c,d,mov] = inpaint('bungee0.png','bungee1.png',[0 255 0],psz);
 %   plotall;           % quick and dirty plotting script
 %   close; movie(mov); % grab some popcorn 
 %
-function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,fillFilename,fillColor,psz)
+function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,fillFilename,psz)
 
-img = double(origImg);
+%{
+
+%% error check
+if ~ismatrix(mask); error('Invalid mask'); end
+if sum(sum(mask~=0 & mask~=1))>0; error('Invalid mask'); end
+if mod(psz,2)==0; error('Patch size psz must be odd.'); end
+%}
+fillColor = [0 255 0];
+
 fillImg = imread(fillFilename);
 fillRegion = fillImg(:,:,1)==fillColor(1) & fillImg(:,:,2)==fillColor(2) & fillImg(:,:,3)==fillColor(3);
 
-origImg = img;
+origImg = double(origImg);
+img = origImg;
 ind = img2ind(img);
 sz = [size(img,1) size(img,2)];
 sourceRegion = ~fillRegion;
