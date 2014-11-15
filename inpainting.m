@@ -44,11 +44,12 @@ if mod(psz,2)==0; error('Patch size psz must be odd.'); end
 %   plotall;           % quick and dirty plotting script
 %   close; movie(mov); % grab some popcorn 
 %
-function [inpaintedImg,origImg,fillImg,C,D,fillMovie] = inpainting(imgFilename,fillFilename,fillColor,psz)
+function [inpaintedImg,fillImg,C,D,fillMovie] = inpainting(origImg,fillFilename,fillColor,psz)
 
-[img,fillImg,fillRegion] = loadimgs(imgFilename,fillFilename,fillColor);
-% img : original
-img = double(img);
+img = double(origImg);
+fillImg = imread(fillFilename);
+fillRegion = fillImg(:,:,1)==fillColor(1) & fillImg(:,:,2)==fillColor(2) & fillImg(:,:,3)==fillColor(3);
+
 origImg = img;
 ind = img2ind(img);
 sz = [size(img,1) size(img,2)];
@@ -66,7 +67,7 @@ C = double(sourceRegion);
 D = repmat(-.1,sz);
 iter = 1;
 % Visualization stuff
-if nargout==6
+if nargout==5
   fillMovie(1).cdata=uint8(img); 
   fillMovie(1).colormap=[];
   origImg(1,1,:) = fillColor;
@@ -122,10 +123,9 @@ while any(fillRegion(:))
   img(rows,cols,:) = ind2img(ind(rows,cols),origImg);  
 
   % Visualization stuff
-  if nargout==6
+  if nargout==5
     ind2 = ind;
-    ind2(logical(fillRegion)) = 1;          % Marcel 11/30/05
-    %ind2(fillRegion) = 1;                  % Original
+    ind2(logical(fillRegion)) = 1;
     fillMovie(iter).cdata=uint8(ind2img(ind2,origImg)); 
     fillMovie(iter).colormap=[];
   end
@@ -179,14 +179,4 @@ for i=3:-1:1, temp=img(:,:,i); img2(:,:,i)=temp(ind); end;
 %---------------------------------------------------------------------
 function ind = img2ind(img)
 s=size(img); ind=reshape(1:s(1)*s(2),s(1),s(2));
-
-
-%---------------------------------------------------------------------
-% Loads the an image and it's fill region, using 'fillColor' as a marker
-% value for knowing which pixels are to be filled.
-%---------------------------------------------------------------------
-function [img,fillImg,fillRegion] = loadimgs(imgFilename,fillFilename,fillColor)
-img = imread(imgFilename); fillImg = imread(fillFilename);
-fillRegion = fillImg(:,:,1)==fillColor(1) & ...
-    fillImg(:,:,2)==fillColor(2) & fillImg(:,:,3)==fillColor(3);
 
