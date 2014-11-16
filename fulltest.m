@@ -30,7 +30,7 @@ for itr_mask = 1:length(MaskNames) % loop for mask
     end
     mask = mask/255;
 
-    for itrIm = 4:length(TestImageNames) % loop for image
+    for itrIm = 1:length(TestImageNames) % loop for image
 
         imageName = cell2mat(TestImageNames(itrIm));
 
@@ -49,13 +49,14 @@ for itr_mask = 1:length(MaskNames) % loop for mask
         tic
         [x_out, Confidence, Data, movie] = inpainting(y_test, logical(~mask), psz);
         toc
-        PSNR_ = imgPSNR(uint8(x_out), uint8(y_test))
 
+        % temporary grayscale evaluation
+        x_out = rgb2gray(uint8(x_out));
+        PSNR_ = imgPSNR(x_out, rgb2gray(uint8(y_test)) )
 
-        imwrite(uint8(y_test),fullfile(SaveFolderPath,SaveFolderName,folderName,'y_test.bmp'),'BMP');
-        imwrite(uint8(y_masked),fullfile(SaveFolderPath,SaveFolderName,folderName,'y_masked.bmp'),'BMP');
+        imwrite(rgb2gray(uint8(y_test)),fullfile(SaveFolderPath,SaveFolderName,folderName,'y_test.bmp'),'BMP');
+        imwrite(rgb2gray(uint8(y_masked)),fullfile(SaveFolderPath,SaveFolderName,folderName,'y_masked.bmp'),'BMP');
         imwrite(uint8(x_out),fullfile(SaveFolderPath,SaveFolderName,folderName,['x_out_PSNR',num2str(PSNR_),'.bmp']),'BMP');
-
 
     end
 
