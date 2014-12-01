@@ -8,7 +8,7 @@ testImageName = 'bungee'; % cow or bungee or man
 psz = 9; % patch size ( to be inpainted in inpainting)
 testImagePath = '~/Documents/MATLAB/AutoShared/testimages/Petter_Strandmark/';
 testImageSource = fullfile(testImagePath,testImageName);
-lab = true;
+lab = false;
 
 
 %% origImg

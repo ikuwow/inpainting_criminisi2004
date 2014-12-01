@@ -3,9 +3,10 @@
 % The MATLAB implementation of inpainting algorithm by A. Criminisi (2004)
 %
 % Inputs: 
-%   - origImg: uint8    original image or corrupted image
+%   - origImg: uint8    original image or corrupted image (RGB)
 %   - mask: logical     implies target region (1 denotes target region)  
 %   - psz: double       patch size (odd scalar). If psz=5, patch size is 5x5.
+%   - lab: logical      If true, origImg is converted to L*a*b* space
 %
 % Outputs:
 %   - inpaintedImg: uint8    The inpainted image; an MxNx3 matrix of doubles. 
@@ -26,7 +27,7 @@ if ~isa(origImg,'uint8');
     warning('Input image is not uint8 and will be converted to uint8');
     origImg = uint8(origImg);
 end
-if lab;origImg = (rgb2lab(origImg));end
+if lab;origImg = rgb2lab(origImg);end
 
 if ~ismatrix(mask)
     error('Invalid mask');
@@ -126,7 +127,7 @@ end
 if lab
     inpaintedImg = uint8(255*lab2rgb(img));
 else
-    inpaintedImg = img;
+    inpaintedImg = uint8(img);
 end
 
 

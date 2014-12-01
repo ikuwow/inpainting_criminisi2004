@@ -1,6 +1,4 @@
 % fulltest.m
-%
-%
 
 clear
 
@@ -15,6 +13,7 @@ psz = 9
 
 TestImageFolderPath = '../AutoShared/testimages';
 TestImageNames = {'barbara','lena','mandril','pepper'};
+lab = false;
 
 MaskNames = {'line','text'};
 masks = load('~/Documents/MATLAB/AutoShared/testimages/mask512.mat');
@@ -47,7 +46,7 @@ for itr_mask = 1:length(MaskNames) % loop for mask
 
         disp([imageName,', ',maskName]);
         tic
-        [x_out, Confidence, Data, movie] = inpainting(y_test, logical(~mask), psz);
+        [x_out, Confidence, Data, movie] = inpainting(y_test, logical(~mask), psz, lab);
         toc
 
         % temporary grayscale evaluation
