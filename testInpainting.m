@@ -1,20 +1,27 @@
+
 clear
+close all
+
 
 %% parameters
 testImageName = 'bungee'; % cow or bungee or man
 psz = 9; % patch size ( to be inpainted in inpainting)
 testImagePath = '~/Documents/MATLAB/AutoShared/testimages/Petter_Strandmark/';
+testImageSource = fullfile(testImagePath,testImageName);
+lab = true;
+
+
+%% origImg
 origImg = imread([testImageSource,'.png']);
 
-
-testImageSource = fullfile(testImagePath,testImageName);
-
+%% mask
 mask = imread([testImageSource,'-mask.png']);
 mask(mask==255) = 1;
+mask = logical(mask);
 
 tic
 %output is fix!
-[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,mask,psz);
+[inpaintedImg,c,d,fillingMovie] = inpainting(origImg,mask,psz,lab);
 toc
 maskedImg = repmat(uint8(~mask),[1,1,3]).*origImg;
 

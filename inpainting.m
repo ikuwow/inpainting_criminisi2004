@@ -3,27 +3,40 @@
 % The MATLAB implementation of inpainting algorithm by A. Criminisi (2004)
 %
 % Inputs: 
-%   - origImg        original image or corrupted image
-%   - mask           implies target region (1 denotes target region) 
-%   - psz:           patch size (odd scalar). If psz=5, patch size is 5x5.
+%   - origImg: uint8    original image or corrupted image
+%   - mask: logical     implies target region (1 denotes target region)  
+%   - psz: double       patch size (odd scalar). If psz=5, patch size is 5x5.
 %
 % Outputs:
-%   - inpaintedImg   The inpainted image; an MxNx3 matrix of doubles. 
-%   - C              MxN matrix of confidence values accumulated over all iterations.
-%   - D              MxN matrix of data term values accumulated over all iterations.
-%   - fillMovie      A Matlab movie struct depicting the fill region over time. 
+%   - inpaintedImg: uint8    The inpainted image; an MxNx3 matrix of doubles. 
+%   - C: double              MxN matrix of confidence values accumulated over all iterations.
+%   - D: double              MxN matrix of data term values accumulated over all iterations.
+%   - fillMovie: struct      A Matlab movie struct depicting the fill region over time. 
 %
 % Example:
 %   [i1,c,d,mov] = inpaint();
 %   plotall;           % quick and dirty plotting script
 %   close; movie(mov); % grab some popcorn 
 %
-function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,mask,psz)
+%   
+function [inpaintedImg,C,D,fillMovie] = inpainting(origImg,mask,psz,lab)
 
-%% error check
-if ~ismatrix(mask); error('Invalid mask'); end
+%% error check section
+if ~isa(origImg,'uint8');
+    warning('Input image is not uint8 and will be converted to uint8');
+    origImg = uint8(origImg);
+end
+if lab;origImg = (rgb2lab(origImg));end
+
+if ~ismatrix(mask)
+    error('Invalid mask');
+elseif ~isa(mask,'logical')
+    warning('Input mask is not logical and will be converted to logical');
+    mask = logical(mask);
+end
 if sum(sum(mask~=0 & mask~=1))>0; error('Invalid mask'); end
 if mod(psz,2)==0; error('Patch size psz must be odd.'); end
+   
 
 fillRegion = mask;
 
@@ -110,7 +123,11 @@ while any(fillRegion(:))
   iter = iter+1;
 end
 
-inpaintedImg = img;
+if lab
+    inpaintedImg = uint8(255*lab2rgb(img));
+else
+    inpaintedImg = img;
+end
 
 
 %---------------------------------------------------------------------
