@@ -4,10 +4,9 @@ clear
 testImageName = 'bungee'; % cow or bungee or man
 psz = 9; % patch size ( to be inpainted in inpainting)
 testImagePath = '~/Documents/MATLAB/AutoShared/testimages/Petter_Strandmark/';
+testImageSource = fullfile(testImagePath,testImageName);
 origImg = imread([testImageSource,'.png']);
 
-
-testImageSource = fullfile(testImagePath,testImageName);
 
 mask = imread([testImageSource,'-mask.png']);
 mask(mask==255) = 1;

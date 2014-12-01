@@ -26,25 +26,24 @@ void bestexemplarhelper(const int mm, const int nn, const int m, const int n,
       /*** Calculate patch error ***/
       /* foreach pixel in the current patch */
       for (jj=j,jj2=1; jj<=J; ++jj,++jj2) {
-	for (ii=i,ii2=1; ii<=I; ++ii,++ii2) {
-	  ndx=ii-1+mm*(jj-1);
-	  if (!sourceRegion[ndx])
-	    goto skipPatch;
-	  ndx2=ii2-1+m*(jj2-1);
-	  if (!toFill[ndx2]) {
-	    err=img[ndx      ] - Ip[ndx2    ]; patchErr += err*err;
-	    err=img[ndx+=mmnn] - Ip[ndx2+=mn]; patchErr += err*err;
-	    err=img[ndx+=mmnn] - Ip[ndx2+=mn]; patchErr += err*err;
-	  }
-	}
+	    for (ii=i,ii2=1; ii<=I; ++ii,++ii2) {
+	      ndx=ii-1+mm*(jj-1);
+	      if (!sourceRegion[ndx]) goto skipPatch;
+	      ndx2=ii2-1+m*(jj2-1);
+	      if (!toFill[ndx2]) {
+	        err=img[ndx      ] - Ip[ndx2    ]; patchErr += err*err;
+	        err=img[ndx+=mmnn] - Ip[ndx2+=mn]; patchErr += err*err;
+	        err=img[ndx+=mmnn] - Ip[ndx2+=mn]; patchErr += err*err;
+	      }
+	    }
       }
       /*** Update ***/
       if (patchErr < bestErr) {
-	bestErr = patchErr; 
-	best[0] = i; best[1] = I;
-	best[2] = j; best[3] = J;
+	    bestErr = patchErr; 
+	    best[0] = i; best[1] = I;
+	    best[2] = j; best[3] = J;
       }
-      /*** Reset ***/
+    /*** Reset ***/
     skipPatch:
       patchErr = 0.0; 
     }
