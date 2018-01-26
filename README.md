@@ -1,6 +1,10 @@
 inpainting_criminisi2004
 ========================
 
+**THIS REPOSITORY IS NO LONGER MAINTEINED.**
+
+---
+
 MATLAB Implementation of inpainting Algorithm by A. Criminisi (2004)
 
 This source code is highly referencing to below:
